@@ -1,0 +1,21 @@
+# macOS
+.DS_Store
+
+# Model binaries — personal-print-only licenses = do NOT redistribute via git.
+# Track structure + MODELS.md manifest, not the files themselves.
+raws/**/*.stl
+raws/**/*.STL
+raws/**/*.3mf
+raws/**/*.obj
+raws/**/*.step
+raws/**/*.stp
+raws/**/*.zip
+
+# Sliced output — big, machine-specific, regenerable from Studio.
+sliced/**/*.gcode
+sliced/**/*.gcode.3mf
+sliced/**/*.3mf
+
+# BUT keep folder structure + anything we explicitly own
+!**/.gitkeep
+!owned/**
