@@ -1,7 +1,7 @@
 id: github-pages-showcase
 epic: ai-toolset-foundations
 title: Scaffold a GitHub Pages showcase site with placeholder content
-status: pending
+status: done
 complexity: medium
 methodology: classic
 depends_on: []

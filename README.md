@@ -1,4 +1,6 @@
-# dostal-3d-printing
+# dostal-3d-printing (DT Forge)
+
+Live showcase: https://mdostal.github.io/dt-forge/
 
 Operational workspace for the Bambu X1C — the actual print jobs: source models, sliced files, plate profiles, and the licensing log for anything we might sell prints of.
 
