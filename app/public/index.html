@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DT Forge — Settings</title>
+  <style>
+    :root { --ground:#f3ead9; --ink:#2a2118; --ink-soft:#55493a; --ember:#c8531a; --rule:#cbb98f; --ok:#3a7d44; --err:#b3261e; }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) { --ground:#17140f; --ink:#f0e6d3; --ink-soft:#c4b8a2; --ember:#ff8a3d; --rule:#453b2b; --ok:#5fb56a; --err:#ff6b60; }
+    }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--ground); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; padding:2.5rem 1.5rem; }
+    main { max-width: 30rem; margin: 0 auto; }
+    h1 { font-size: 1.6rem; margin: 0 0 0.25rem; }
+    .sub { color: var(--ink-soft); font-size: 0.9rem; margin-bottom: 2rem; }
+    label { display:block; font-size: 0.85rem; color: var(--ink-soft); margin-bottom: 0.4rem; }
+    input[type="password"] { width:100%; padding:0.65rem 0.75rem; border:1px solid var(--rule); border-radius:4px; background:transparent; color:var(--ink); font-size:0.95rem; }
+    button { margin-top:0.9rem; padding:0.6rem 1.1rem; border:none; border-radius:4px; background:var(--ember); color:#fff6ee; font-weight:600; cursor:pointer; font-size:0.9rem; }
+    button:disabled { opacity:0.5; cursor:not-allowed; }
+    button.secondary { background:transparent; border:1px solid var(--rule); color:var(--ink); margin-left:0.5rem; }
+    .status { margin-top:1.5rem; padding:0.9rem 1rem; border-radius:4px; border:1px solid var(--rule); font-size:0.85rem; white-space:pre-wrap; }
+    .status.ok { border-color: var(--ok); color: var(--ok); }
+    .status.err { border-color: var(--err); color: var(--err); }
+    .pill { display:inline-block; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.06em; padding:0.15rem 0.5rem; border-radius:2px; background:color-mix(in srgb, var(--ember) 16%, transparent); color:var(--ember); margin-bottom:1rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="pill" id="config-pill">checking…</div>
+    <h1>BYOK setup</h1>
+    <p class="sub">Bring your own key or subscription. Stored via Portunus, routed through Heimdall — nothing else in this shell touches the key.</p>
+
+    <label for="key">API key / subscription token</label>
+    <input type="password" id="key" placeholder="sk-..." autocomplete="off">
+    <div>
+      <button id="save">Save key</button>
+      <button id="test" class="secondary">Run test call</button>
+    </div>
+
+    <div id="result"></div>
+  </main>
+
+  <script>
+    const pill = document.getElementById('config-pill');
+    const result = document.getElementById('result');
+    const keyInput = document.getElementById('key');
+
+    function showResult(ok, text) {
+      result.className = 'status ' + (ok ? 'ok' : 'err');
+      result.textContent = text;
+    }
+
+    async function refreshStatus() {
+      const res = await fetch('/api/status');
+      const data = await res.json();
+      pill.textContent = data.configured ? 'key configured' : 'no key configured';
+    }
+
+    document.getElementById('save').addEventListener('click', async () => {
+      const value = keyInput.value;
+      if (!value) { showResult(false, 'Enter a key first.'); return; }
+      try {
+        const res = await fetch('/api/key', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ value }),
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) throw new Error(data.error || 'save failed');
+        keyInput.value = '';
+        showResult(true, 'Key saved via Portunus.');
+        refreshStatus();
+      } catch (err) {
+        showResult(false, 'Save failed: ' + err.message);
+      }
+    });
+
+    document.getElementById('test').addEventListener('click', async () => {
+      try {
+        const res = await fetch('/api/test-call', { method: 'POST' });
+        const data = await res.json();
+        if (!res.ok || !data.ok) throw new Error(data.error || 'test call failed');
+        showResult(true, 'Heimdall reachable — ' + data.laneCount + ' lane(s):\n' +
+          data.lanes.map(l => `  ${l.lane_id}: ${l.status}`).join('\n'));
+      } catch (err) {
+        showResult(false, 'Test call failed: ' + err.message);
+      }
+    });
+
+    refreshStatus();
+  </script>
+</body>
+</html>

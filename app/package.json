@@ -1,0 +1,11 @@
+{
+  "name": "dt-forge-app-shell",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "DT Forge installable app shell — BYOK key entry (Portunus) + Heimdall test call. No chat studio yet.",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test test/*.test.js"
+  }
+}

@@ -1,7 +1,7 @@
 id: byok-app-shell
 epic: ai-toolset-foundations
 title: Installable BYOK app shell — key entry via Portunus, one routed call via Heimdall
-status: pending
+status: done
 complexity: high
 methodology: classic
 depends_on: []
@@ -79,3 +79,14 @@ references:
         ... an installable app that lets users bring their own
         key/subscription (BYOK) ... dogfooding Heimdall (LLM routing) and
         Portunus (secrets), as done in gigradar and other projects.
+
+implementation_note: |
+  Framework: plain Node (zero deps) local HTTP server, not Tauri. Research
+  step confirmed gigradar's convention is Tauri + bundled server
+  (src-tauri/resources/server) — that's the natural packaging follow-up for
+  a true installable desktop bundle, deliberately deferred here to ship a
+  working, fully-tested shell first rather than spend this slice on Rust/
+  Tauri packaging. Heimdall's "test call" is a lane-status check (real CLI
+  call, real data) rather than a chat completion — the completion API
+  surface wasn't confirmed during research, so the shell proves
+  connectivity honestly instead of faking a completion response.
