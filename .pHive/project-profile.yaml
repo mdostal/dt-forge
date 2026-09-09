@@ -1,4 +1,5 @@
 project_name: "dostal-3d-printing"
+toolset_name: "DT Forge"   # confirmed 2026-09-09; GitHub remote github.com/mdostal/dt-forge. "Daedalus" is the planned Pantheon integration that consumes DT Forge's tools — separate project, not yet started.
 project_type: framework
 has_ui: true
 type: brownfield

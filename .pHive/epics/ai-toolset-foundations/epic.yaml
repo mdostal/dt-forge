@@ -16,7 +16,7 @@ version_bump: none
 sidecar_retention: committed
 
 git_flow:
-  base_branch: dev   # remote created 2026-09-09 (github.com/mdostal/hephaestus, provisional name); PRs land on dev, dev promotes to main per release
+  base_branch: dev   # remote: github.com/mdostal/dt-forge (created 2026-09-09 as "hephaestus", renamed to "DT Forge" same day per user decision); PRs land on dev, dev promotes to main per release
   branch_strategy: per-epic
 
 # Classification/routing infra (planning-classification, planning-routing,
