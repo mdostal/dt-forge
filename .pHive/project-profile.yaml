@@ -1,0 +1,116 @@
+project_name: "dostal-3d-printing"
+project_type: framework
+has_ui: true
+type: brownfield
+discovered: "2026-09-08"
+source: "README.md + MODELS.md + print-log.md + kickoff conversation"
+
+ship_target:
+  kind: github-release
+  notes: "No packaged artifact yet. A tagged GitHub release marks 'shipped' milestones for the toolset as it's built out."
+
+claude_md_summary: |
+  No CLAUDE.md yet. Ground truth today is README.md + MODELS.md + print-log.md:
+  - This is the "shop-floor" repo for a Bambu X1C: model manifest, sliced-file
+    workflow, plate profiles, and a licensing log. Model *creation/tooling*
+    (AI-3D, CAD, photo-to-3D, drone-to-model) lives in a sibling repo,
+    `../model-forge`.
+  - `raws/` and `sliced/` are git-ignored — most MakerWorld/Printables/
+    Thingiverse models are personal-print-only; committing the binaries would
+    be redistribution. Only self-modeled/owned/commercially-licensed files go
+    under an `owned/` folder and get committed.
+  - MODELS.md is the manifest of record (source, creator, license, status);
+    print-log.md is the print-run history.
+
+tech_stack:
+  languages: [markdown, yaml]
+  frameworks: []
+  build_tools: []
+  package_managers: []
+  versions: {}
+
+structure:
+  modules:
+    - name: raws
+      purpose: "Downloaded model files (STL/3mf), not committed; kids-toys/printer-tools/functional subfolders"
+      source: raws/
+    - name: sliced
+      purpose: "Bambu Studio output (.gcode.3mf), not committed"
+      source: sliced/
+    - name: plate-profiles
+      purpose: "Exported slicer profiles per plate/material"
+      source: plate-profiles/
+  entry_points:
+    - MODELS.md
+    - print-log.md
+
+architecture:
+  pattern: "Manifest + file-drop workflow (no application code yet)"
+  di_framework: n/a
+  state_management: "Flat markdown manifests (MODELS.md, print-log.md) as source of truth"
+  navigation: n/a
+  data_layer: "Local filesystem (raws/, sliced/, plate-profiles/), git-ignored binaries + tracked manifests"
+
+conventions:
+  naming: "Status emoji legend in MODELS.md: ⬜ to pull · ✅ in raws · 🎚️ sliced · 🖨️ printed"
+  file_organization: "raws/{kids-toys,printer-tools,functional}; owned/ reserved for commercially-clear models"
+  branching: "Single master branch so far (1 commit at kickoff)"
+  commit_messages: "Not enough history yet to establish a pattern"
+
+test_infrastructure:
+  unit: { framework: none, location: n/a, count: "0", coverage_tool: none }
+  integration: { framework: none, location: n/a }
+  e2e: { framework: none, location: n/a, count: "0" }
+  mocking: none
+  test_commands: []
+
+ci_cd:
+  platform: none
+  workflows: []
+  gating: "None configured yet"
+
+documentation_found:
+  - path: README.md
+    content_summary: "Repo purpose, layout, licensing rationale for git-ignoring raws/ and sliced/, and the pull→log→slice→print→log flow"
+  - path: MODELS.md
+    content_summary: "Model manifest: source, creator, license, status per model across kids-toys/printer-tools/functional/owned"
+  - path: print-log.md
+    content_summary: "Print run history and settings"
+
+existing_knowledge:
+  mcp_servers: []
+  existing_skills: []
+  existing_hooks: []
+
+integrations:
+  cli_tools: {}
+  mcp_servers:
+    heimdall: { detected: true, note: "Session-level MCP; intended per kickoff conversation as the LLM-routing layer for the future BYOK app, dogfooding the same pattern used in gigradar." }
+    portunus: { detected: true, note: "Session-level MCP; intended per kickoff conversation for secret/key management (BYOK) in the future app." }
+  vaults: {}
+
+north_star:
+  goal: >
+    Build a framework/toolset (same "big library" pattern as the drone project)
+    for AI-assisted 3D model capture and print-prep: feed images, measurements,
+    and a prompt to help reverse-engineer, create, and rough out STL/model
+    files and brackets; iterate via a chat-based "studio" while working with an
+    agent; link a printer to an agent to mix tools further. Wrap the toolset in
+    a GitHub Pages showcase app (matching the other mdostal GitHub Pages
+    projects), with an installable app that lets users bring their own
+    key/subscription (BYOK) and use the same tooling — dogfooding Heimdall
+    (LLM routing) and Portunus (secrets), as done in gigradar and other
+    projects.
+  audience: >
+    Personal + household (Mathew, Clarabel) today; the GitHub Pages showcase
+    and installable BYOK app are meant to open the tooling to other makers
+    later, mirroring the pattern of other mdostal GitHub Pages projects.
+  expected_scale: >
+    Single user today. The future showcase app is public-facing, but BYOK
+    means each user brings their own key/subscription, so there's no shared
+    backend load to plan capacity for.
+  pain_points: >
+    Manually tracking model license/status through the raws → sliced →
+    printed lifecycle in MODELS.md. Bigger pain: need AI automation and
+    assistance for reverse-engineering, creating, designing, and rough-drafting
+    model and printer-agent systems as the toolset is built out.
