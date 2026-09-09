@@ -1,6 +1,11 @@
 # macOS
 .DS_Store
 
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
 # Model binaries — personal-print-only licenses = do NOT redistribute via git.
 # Track structure + MODELS.md manifest, not the files themselves.
 raws/**/*.stl
