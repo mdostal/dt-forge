@@ -26,7 +26,7 @@ tokens:
 task_tracking:
   adapter: github
   team_value: mdostal
-  project_value: hephaestus
+  project_value: dt-forge
   github:
     token: null
 
