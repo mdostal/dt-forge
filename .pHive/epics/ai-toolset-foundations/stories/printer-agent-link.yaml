@@ -1,0 +1,92 @@
+id: printer-agent-link
+epic: ai-toolset-foundations
+title: Read-only Bambu X1C status link + send/queue a sliced file for a human to print
+status: pending
+complexity: high
+methodology: classic
+depends_on: []
+
+description: |
+  Give an agent the ability to (a) query the Bambu X1C's current status —
+  print job state, progress, AMS filament/slot state — over LAN mode, and
+  (b) push a sliced .gcode.3mf file to the printer's onboard storage /
+  queue so a human can start it from the printer's screen or Bambu Studio.
+  Autonomous start/stop/pause control is explicitly OUT of scope for this
+  story (deferred to a follow-on slice per design-discussion §5 Q1) — this
+  story only reads state and hands off a queued job for a human to act on.
+
+acceptance_criteria:
+  - "Given the X1C is on the same LAN and LAN-mode access code is configured, when the agent queries status, then it returns current job state, progress %, and AMS slot/filament info"
+  - "Given a .gcode.3mf file in sliced/, when the agent sends it to the printer, then the file appears in the printer's local job list/storage, ready for a human to start"
+  - "Given the printer is offline or unreachable, when status is queried, then the adapter returns a clear offline/unreachable result rather than hanging or crashing"
+  - "Given the story is complete, when a start/stop/pause call is attempted, then it explicitly fails with a 'not supported in this slice' message, not a silent no-op"
+
+steps:
+  - id: research
+    description: |
+      Investigate the X1C's LAN-mode local API (MQTT over TLS on 8883, and/or
+      the local HTTP/FTP-adjacent surfaces used by community projects like
+      bambulabs_api / homeassistant-bambulab). Confirm auth (LAN access code +
+      serial), the status/AMS message shape, and the file-push mechanism
+      (commonly FTPS to the printer's onboard SD). No official Bambu Lab
+      developer docs exist for this — treat community references as
+      unofficial and note versioning risk explicitly in the brief.
+    agent: researcher
+  - id: implement
+    description: |
+      Build a thin adapter module (isolated from the rest of the repo so
+      firmware-driven breakage is contained) exposing get_status(),
+      get_ams_state(), and send_file(path) -> queued/failed. Store the LAN
+      access code + serial via Portunus rather than a plaintext config file.
+    agent: developer
+    depends_on: [research]
+  - id: test
+    description: Manual verification against the real X1C (status query, AMS read, sending one real sliced file) since no printer simulator exists; also verify offline-handling with the printer powered off.
+    agent: tester
+    depends_on: [implement]
+  - id: review
+    description: Review for adapter isolation (firmware breakage blast radius), that no printer credentials are hardcoded, and that start/stop/pause are explicitly rejected rather than silently missing.
+    agent: reviewer
+    depends_on: [test]
+  - id: integrate
+    description: Commit and push to feature branch.
+    agent: developer
+    depends_on: [review]
+
+context:
+  codebase: /Users/mdostal/Documents/work/dostal-3d-printing
+  tech_stack: { languages: [markdown, yaml], frameworks: [] }
+  key_files:
+    - path: sliced/
+      purpose: Source of the .gcode.3mf files this story sends to the printer
+
+files_to_modify:
+  - file: printer/adapter.* (new)
+    change: New isolated adapter module for X1C LAN-mode status + file push (language TBD by developer)
+
+design_decisions:
+  - decision: Read status + send-file only; no start/stop/pause in this slice
+    rationale: User explicitly confirmed read-only + queue-for-human scope at the design-discussion review gate; proves the connection is reliable before granting write/control access
+  - decision: Isolate the printer integration behind a thin adapter module
+    rationale: The local API is unofficial/reverse-engineered; firmware updates have broken community integrations before, so blast radius must be contained to one module
+
+cross_cutting:
+  - concern: model-licensing
+    action: "Sending a file to the printer must not be the trigger that marks a model 'printed' in MODELS.md — that stays evidence-based per print-log.md (see models-md-automation story)"
+  - concern: documentation
+    action: "Document the LAN-mode setup steps (enabling LAN mode + access code on the X1C) in README.md or a new printer/README.md"
+
+risks:
+  - severity: high
+    description: X1C local API is unofficial; a firmware update could break status/AMS reads or the file-push mechanism without warning
+    mitigation: Adapter isolation contains breakage to one module; status/AMS reads degrade to a clear error rather than crashing callers
+  - severity: medium
+    description: Storing printer LAN credentials insecurely would be a real risk if this code is ever made public
+    mitigation: Credentials go through Portunus, never committed to the repo
+
+references:
+  - path: ../../../.pHive/project-profile.yaml
+    relevant_excerpt: |
+      integrations:
+        mcp_servers:
+          portunus: { detected: true, note: "... intended per kickoff conversation for secret/key management (BYOK) in the future app." }
