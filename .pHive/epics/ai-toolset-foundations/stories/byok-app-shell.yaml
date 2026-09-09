@@ -1,0 +1,81 @@
+id: byok-app-shell
+epic: ai-toolset-foundations
+title: Installable BYOK app shell — key entry via Portunus, one routed call via Heimdall
+status: pending
+complexity: high
+methodology: classic
+depends_on: []
+
+description: |
+  Stand up the minimal installable app shell for the future "studio" —
+  no chat UI, no model generation, no wiring into model-forge yet. Just:
+  the app opens, a settings screen lets the user enter/select their own
+  LLM key or subscription (BYOK) which is stored via Portunus, and one
+  trivial test call is routed through Heimdall to prove the dogfooding
+  wiring (Heimdall for routing, Portunus for secrets — the same pattern
+  used in gigradar) works end-to-end on the smallest possible surface.
+  App framework (Tauri/Electron/web-wrapped/etc.) is decided by the
+  developer at implementation time — deferred per design-discussion §5 Q2.
+
+acceptance_criteria:
+  - "Given a fresh install, when the app opens, then it presents a settings screen for entering a BYOK key/subscription"
+  - "Given a key is entered, when saved, then it is stored via Portunus, not in a plaintext local file"
+  - "Given a key is stored, when the user triggers the test call, then Heimdall routes it and the app shows success/failure clearly"
+  - "Given no key is configured, when the test call is attempted, then the app shows a clear 'configure a key first' message rather than failing silently"
+
+steps:
+  - id: research
+    description: |
+      Decide the app shell framework given target platforms (confirm with
+      user if unclear whether Mac-only or cross-platform is intended) and
+      survey how gigradar wires Heimdall + Portunus so this shell follows
+      the same established pattern rather than inventing a new one.
+    agent: researcher
+  - id: implement
+    description: Scaffold the app shell, settings screen with BYOK key entry backed by Portunus, and one Heimdall-routed test call.
+    agent: developer
+    depends_on: [research]
+  - id: test
+    description: Verify the full loop — install, enter key, key persists via Portunus, test call succeeds through Heimdall, and the no-key error path.
+    agent: tester
+    depends_on: [implement]
+  - id: review
+    description: Review that no key material ever touches disk outside Portunus, and that the shell has no chat/studio/model-gen surface yet (scope creep check).
+    agent: reviewer
+    depends_on: [test]
+  - id: integrate
+    description: Commit and push to feature branch.
+    agent: developer
+    depends_on: [review]
+
+context:
+  codebase: /Users/mdostal/Documents/work/dostal-3d-printing
+  tech_stack: { languages: [markdown, yaml], frameworks: [] }
+  key_files: []
+
+files_to_modify:
+  - file: app/ (new)
+    change: New app shell project (framework decided in the research step)
+
+design_decisions:
+  - decision: Ship shell + BYOK wiring only, no chat studio or model-gen in this slice
+    rationale: model-forge doesn't yet have the capture/generation tooling this would call into; building studio UI now risks UI for capabilities that don't exist (design-discussion §3)
+  - decision: Framework choice deferred to the story's research step
+    rationale: User confirmed at the review gate — deciding now would be premature without a clearer platform-target answer
+
+cross_cutting:
+  - concern: documentation
+    action: "README.md or a new app/README.md documents the BYOK setup flow and the Heimdall/Portunus dogfooding pattern being followed"
+
+risks:
+  - severity: medium
+    description: Choosing the wrong app framework now could mean a costly rewrite once the chat studio + model-gen wiring is added later
+    mitigation: Shell scope is deliberately minimal; a framework mistake here is cheaper to unwind than after studio features exist
+
+references:
+  - path: ../../../.pHive/project-profile.yaml
+    relevant_excerpt: |
+      goal: >
+        ... an installable app that lets users bring their own
+        key/subscription (BYOK) ... dogfooding Heimdall (LLM routing) and
+        Portunus (secrets), as done in gigradar and other projects.
