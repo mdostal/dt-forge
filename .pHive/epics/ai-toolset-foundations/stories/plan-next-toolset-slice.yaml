@@ -1,0 +1,66 @@
+id: plan-next-toolset-slice
+epic: ai-toolset-foundations
+title: Queue the next planning pass for the AI toolset backlog
+status: pending
+complexity: low
+methodology: classic
+depends_on: [models-md-automation, printer-agent-link, byok-app-shell, github-pages-showcase]
+
+description: |
+  Rolling-wave hand-off story (per the user's explicit request at kickoff:
+  "leave a high level task at the end of an epic to plan the next area").
+  Once the four foundation slices land, re-invoke /plugin-hive:plan scoped
+  to whichever area most needs deepening next. This story's "implementation"
+  IS the next planning invocation — it exists so the backlog doesn't go
+  quiet after this epic closes.
+
+acceptance_criteria:
+  - "Given all four foundation slices have landed (or been explicitly deferred with a documented reason), when this story runs, then a candidate next-epic scope is proposed to the user"
+  - "Given the user confirms a next-epic scope, when this story completes, then /plugin-hive:plan has been invoked for that scope (or a concrete next step is scheduled)"
+
+steps:
+  - id: research
+    description: |
+      Review what actually landed vs. was deferred across the four slices,
+      and re-check model-forge's ROADMAP.md for what's ready to plan there.
+      Candidate next scopes to weigh: (a) printer start/stop/pause control
+      now that read-only is proven, (b) wiring the BYOK app shell's studio
+      to model-forge's tooling, (c) model-forge's own Milestone 1
+      (bracket-gen) if that repo is ready for its own Hive plan.
+    agent: researcher
+  - id: implement
+    description: Propose the next-epic scope to the user, get confirmation, and invoke /plugin-hive:plan (in this repo or model-forge, per the confirmed scope).
+    agent: developer
+    depends_on: [research]
+  - id: review
+    description: Confirm the next planning pass was actually kicked off (not just proposed) before closing this epic out.
+    agent: reviewer
+    depends_on: [implement]
+  - id: integrate
+    description: Commit and push to feature branch.
+    agent: developer
+    depends_on: [review]
+
+context:
+  codebase: /Users/mdostal/Documents/work/dostal-3d-printing
+  tech_stack: { languages: [markdown, yaml], frameworks: [] }
+  key_files:
+    - path: ../model-forge/ROADMAP.md
+      purpose: Candidate source for the next epic if model-forge's own pipeline is the highest-priority next slice
+
+files_to_modify: []
+
+design_decisions:
+  - decision: This story's deliverable is a planning invocation, not code
+    rationale: Explicit rolling-wave pattern requested by the user — the backlog should auto-continue rather than dead-end at epic close
+
+cross_cutting:
+  - concern: documentation
+    action: "Update .pHive/project-profile.yaml north_star or a backlog note with whatever scope gets deferred here, so it isn't lost"
+
+risks:
+  - severity: low
+    description: If none of the four foundation slices land cleanly, this story has little signal to propose a good next scope from
+    mitigation: Acceptance criteria allows explicitly-deferred slices with documented reasons, not just fully-landed ones
+
+references: []

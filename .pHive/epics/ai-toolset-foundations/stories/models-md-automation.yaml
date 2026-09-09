@@ -1,0 +1,82 @@
+id: models-md-automation
+epic: ai-toolset-foundations
+title: Automate MODELS.md status reconciliation against raws/ and sliced/
+status: pending
+complexity: low
+methodology: classic
+depends_on: []
+
+description: |
+  MODELS.md tracks every model's source/creator/license/status by hand, using
+  the emoji legend (⬜ to pull · ✅ in raws · 🎚️ sliced · 🖨️ printed). This
+  drifts from reality as files move through raws/ and sliced/ without the
+  manifest being updated. Build a script that scans raws/ and sliced/,
+  matches files to MODELS.md entries (by filename/model-link heuristics), and
+  reports or auto-corrects status mismatches. This directly addresses the
+  #1 pain point captured at kickoff.
+
+acceptance_criteria:
+  - "Given a model file present under raws/<subfolder>/ with no matching MODELS.md row at ✅ or beyond, when the script runs, then it reports the mismatch (and optionally updates the row to ✅)"
+  - "Given a .gcode.3mf file present under sliced/ for a model already in MODELS.md, when the script runs, then that model's status is reconciled to at least 🎚️"
+  - "Given a model with no corresponding file anywhere on disk, when the script runs, then it is left at ⬜ and not flagged as an error"
+  - "Given print-log.md has an entry referencing a model, when the script runs, then that model's status is reconciled to 🖨️"
+
+steps:
+  - id: research
+    description: Confirm MODELS.md table structure and print-log.md entry format precisely enough to parse reliably; decide match key (filename vs MakerWorld link vs model name).
+    agent: researcher
+  - id: implement
+    description: Write the reconciliation script (report mode by default; --apply flag to write status changes back to MODELS.md).
+    agent: developer
+    depends_on: [research]
+  - id: test
+    description: Run against the current MODELS.md and raws/ contents (mostly empty today); verify report is accurate and --apply doesn't corrupt table formatting.
+    agent: tester
+    depends_on: [implement]
+  - id: review
+    description: Review for correctness and that it never silently downgrades a status (e.g. never moves 🖨️ back to ✅).
+    agent: reviewer
+    depends_on: [test]
+  - id: integrate
+    description: Commit and push to feature branch.
+    agent: developer
+    depends_on: [review]
+
+context:
+  codebase: /Users/mdostal/Documents/work/dostal-3d-printing
+  tech_stack: { languages: [markdown, yaml], frameworks: [] }
+  key_files:
+    - path: MODELS.md
+      purpose: The manifest table this script reads and (optionally) writes
+    - path: print-log.md
+      purpose: Source of truth for which models have actually been printed
+    - path: raws/
+      purpose: Presence of a file here means a model is at least ✅
+    - path: sliced/
+      purpose: Presence of a .gcode.3mf here means a model is at least 🎚️
+
+files_to_modify:
+  - file: MODELS.md
+    change: Status emoji updated when --apply is used (no structural changes to the table)
+  - file: scripts/reconcile-models.* (new)
+    change: New reconciliation script (language TBD by developer — Python or Node, whichever the developer prefers; no existing convention to match yet)
+
+design_decisions:
+  - decision: Report-only by default, --apply is opt-in
+    rationale: MODELS.md is the licensing-honesty record; silent auto-writes to a compliance-relevant file are riskier than a report the human confirms
+
+cross_cutting:
+  - concern: documentation
+    action: "Update README.md's 'The flow' section to mention the reconciliation script as an optional step after slicing/printing"
+  - concern: model-licensing
+    action: "Script must never write a status forward (e.g. to 🖨️) without corroborating evidence in print-log.md — status changes are evidence-based, not guessed"
+
+risks:
+  - severity: low
+    description: Filename-to-manifest matching is heuristic and raws/ is currently empty, so the matcher is unverified against real data
+    mitigation: Report mode surfaces ambiguous matches for human review rather than guessing silently
+
+references:
+  - path: MODELS.md
+    relevant_excerpt: |
+      Legend — Use: 🧸 kid toy · 🖨️ printer tool · 🔩 functional · Status: ⬜ to pull · ✅ in raws · 🎚️ sliced · 🖨️ printed

@@ -1,0 +1,64 @@
+id: github-pages-showcase
+epic: ai-toolset-foundations
+title: Scaffold a GitHub Pages showcase site with placeholder content
+status: pending
+complexity: medium
+methodology: classic
+depends_on: []
+
+description: |
+  Scaffold a public GitHub Pages site for this project, matching the
+  convention of the user's other mdostal GitHub Pages projects (static
+  site + GH Actions deploy). Placeholder/"coming soon" content only —
+  real showcase copy is a deliberate fast-follow, not part of this slice
+  (confirmed at the design-discussion review gate).
+
+acceptance_criteria:
+  - "Given the site is deployed, when visited, then it shows a placeholder page describing the project at a high level"
+  - "Given a push to the configured branch, when GH Actions runs, then the site redeploys automatically"
+  - "Given the existing pattern from other mdostal GitHub Pages projects, when this site is scaffolded, then it follows the same structural convention (build tool, deploy workflow shape)"
+
+steps:
+  - id: research
+    description: Look at the structure/deploy workflow of another existing mdostal GitHub Pages project to match convention (ask user which one to reference if not obvious from the GitHub account).
+    agent: researcher
+  - id: implement
+    description: Scaffold the site (structure matching the referenced convention) with placeholder content and a GH Actions deploy workflow.
+    agent: developer
+    depends_on: [research]
+  - id: test
+    description: Verify the deploy workflow runs successfully and the placeholder page is reachable at the resulting Pages URL.
+    agent: tester
+    depends_on: [implement]
+  - id: review
+    description: Review for consistency with the referenced convention and that no real (unfinished) content is presented as final.
+    agent: reviewer
+    depends_on: [test]
+  - id: integrate
+    description: Commit and push to feature branch.
+    agent: developer
+    depends_on: [review]
+
+context:
+  codebase: /Users/mdostal/Documents/work/dostal-3d-printing
+  tech_stack: { languages: [markdown, yaml], frameworks: [] }
+  key_files: []
+
+files_to_modify:
+  - file: docs/ or a new gh-pages source dir (new)
+    change: New static site scaffold + .github/workflows/deploy.yml
+
+design_decisions:
+  - decision: Placeholder content only, no real showcase copy in this slice
+    rationale: User confirmed at the review gate — content work is separate from structural scaffolding
+
+cross_cutting:
+  - concern: documentation
+    action: "README.md gets a line linking to the live Pages URL once deployed"
+
+risks:
+  - severity: low
+    description: No content brief exists yet, so placeholder copy may need rework once real content is written
+    mitigation: Explicitly scoped as placeholder; not a blocker for this slice
+
+references: []

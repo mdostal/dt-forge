@@ -1,0 +1,62 @@
+name: ai-toolset-foundations
+title: AI toolset foundations — printer link, BYOK app shell, showcase site, manifest automation
+description: |
+  Rolling-wave foundations epic for the AI-assisted maker toolset direction
+  captured at kickoff (2026-09-08). Four first-slice areas that live in
+  dostal-3d-printing specifically (shop-floor + app/showcase layer):
+  MODELS.md automation, a read-only Bambu X1C status/send-file link, a
+  minimal BYOK app shell (Heimdall + Portunus), and a placeholder GitHub
+  Pages showcase. model-forge's own capture/CAD/photogrammetry pipeline is
+  explicitly out of scope here — it gets planned separately, in that repo.
+  Closes with a hand-off story that queues the next planning pass rather
+  than trying to plan the full long-horizon vision in one epic.
+target_codebase: /Users/mdostal/Documents/work/dostal-3d-printing
+methodology: classic
+version_bump: none
+sidecar_retention: committed
+
+git_flow:
+  base_branch: master   # no remote/origin configured, no local `main` branch exists (only `master`) — using the repo's actual default branch rather than the protocol's generic `main` fallback
+  branch_strategy: per-epic
+
+# Classification/routing infra (planning-classification, planning-routing,
+# dag_executor, Multica) was not available from this project's working
+# directory in this session (hive.lib only imports from within the
+# plugin-hive repo itself, and Multica/CC-Workflows were not configured).
+# The orchestrator performed research, writing, and decomposition directly
+# rather than dispatching distinct personas — this block reflects that
+# manual reasoning, not an automated classifier run.
+planning_team:
+  matched_tags: [greenfield-multi-area, personal-project, integration-heavy, rolling-wave]
+  roster: [researcher, technical-writer, tpm]
+  per_tag_reasoning:
+    greenfield-multi-area: "No existing app code; four distinct new areas (printer integration, app shell, static site, automation script) needed research + design + decomposition"
+    integration-heavy: "Printer LAN API (unofficial) and BYOK/Heimdall/Portunus wiring carry real technical risk, warranting a research step ahead of implementation in each story"
+    rolling-wave: "User explicitly requested first-slice-only scope per area plus a hand-off story to queue the next plan, rather than full-delivery structured outline ceremony"
+  confidence: medium
+  gate_decisions:
+    design_discussion_review: user-gate-run
+    hv_gate: skipped-condensed-per-user-request
+    structured_outline: skipped-rolling-wave-scope
+
+stories:
+  - id: models-md-automation
+    title: Automate MODELS.md status reconciliation against raws/ and sliced/
+    complexity: low
+    depends_on: []
+  - id: printer-agent-link
+    title: Read-only Bambu X1C status link + send/queue a sliced file for a human to print
+    complexity: high
+    depends_on: []
+  - id: byok-app-shell
+    title: Installable BYOK app shell — key entry via Portunus, one routed call via Heimdall
+    complexity: high
+    depends_on: []
+  - id: github-pages-showcase
+    title: Scaffold a GitHub Pages showcase site with placeholder content
+    complexity: medium
+    depends_on: []
+  - id: plan-next-toolset-slice
+    title: Queue the next planning pass for the AI toolset backlog
+    complexity: low
+    depends_on: [models-md-automation, printer-agent-link, byok-app-shell, github-pages-showcase]
