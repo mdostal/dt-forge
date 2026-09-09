@@ -30,3 +30,7 @@ So we track the **structure and the manifest**, not the model binaries. Drop the
 3. Slice in Bambu Studio (textured PEI plate, AMS colors) → save `.gcode.3mf` to `sliced/`.
 4. Send over WiFi **or** copy to the SD card (`/Volumes/BAMBU`).
 5. Print → jot the result in `print-log.md`.
+6. (Optional) Run `python3 scripts/reconcile_models.py` to check `MODELS.md`'s
+   status column against what's actually in `raws/`, `sliced/`, and
+   `print-log.md`. Add `--apply` to write the corrections. It only ever moves
+   a status forward (⬜→✅→🎚️→🖨️), never back.

@@ -1,7 +1,7 @@
 id: models-md-automation
 epic: ai-toolset-foundations
 title: Automate MODELS.md status reconciliation against raws/ and sliced/
-status: pending
+status: done
 complexity: low
 methodology: classic
 depends_on: []
