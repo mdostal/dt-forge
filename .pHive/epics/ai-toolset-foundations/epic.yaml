@@ -16,7 +16,7 @@ version_bump: none
 sidecar_retention: committed
 
 git_flow:
-  base_branch: master   # no remote/origin configured, no local `main` branch exists (only `master`) — using the repo's actual default branch rather than the protocol's generic `main` fallback
+  base_branch: dev   # remote created 2026-09-09 (github.com/mdostal/hephaestus, provisional name); PRs land on dev, dev promotes to main per release
   branch_strategy: per-epic
 
 # Classification/routing infra (planning-classification, planning-routing,

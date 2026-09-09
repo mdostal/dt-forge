@@ -24,7 +24,11 @@ tokens:
   warning_threshold: 0.8
 
 task_tracking:
-  adapter: null
+  adapter: github
+  team_value: mdostal
+  project_value: hephaestus
+  github:
+    token: null
 
 execution:
   default_methodology: classic
