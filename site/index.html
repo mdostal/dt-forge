@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DT Forge</title>
+  <meta name="description" content="DT Forge — an AI-assisted toolset for capturing, modeling, and print-prepping on a Bambu X1C.">
+  <style>
+    :root {
+      --ground: #f3ead9;
+      --ink: #2a2118;
+      --ink-soft: #55493a;
+      --ember: #c8531a;
+      --rule: #cbb98f;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --ground: #17140f;
+        --ink: #f0e6d3;
+        --ink-soft: #c4b8a2;
+        --ember: #ff8a3d;
+        --rule: #453b2b;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--ground);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      display: flex;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    main { max-width: 34rem; }
+    h1 {
+      font-size: clamp(2.2rem, 6vw, 3.2rem);
+      margin: 0 0 0.5rem;
+      letter-spacing: -0.01em;
+    }
+    .tag {
+      font-family: ui-monospace, "SF Mono", monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ember);
+      margin-bottom: 1rem;
+    }
+    p { color: var(--ink-soft); line-height: 1.6; }
+    .links {
+      margin-top: 2rem;
+      display: flex;
+      gap: 1.25rem;
+      border-top: 1px solid var(--rule);
+      padding-top: 1.25rem;
+    }
+    a {
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 0.95rem;
+      border-bottom: 1px solid var(--ember);
+    }
+    a:hover { color: var(--ember); }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="tag">Coming soon</div>
+    <h1>DT Forge</h1>
+    <p>
+      An AI-assisted toolset for the maker's shop floor: capture a part, rough
+      out a print-ready model, and keep a Bambu X1C running &mdash; with an agent
+      doing the fetching and a human doing the printing.
+    </p>
+    <p>
+      This page is a placeholder while the toolset itself gets built out.
+      Real content lands as the pieces do.
+    </p>
+    <div class="links">
+      <a href="https://github.com/mdostal/dt-forge">Source on GitHub</a>
+    </div>
+  </main>
+</body>
+</html>
