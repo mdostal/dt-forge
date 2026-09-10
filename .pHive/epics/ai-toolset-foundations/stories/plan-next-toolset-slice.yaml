@@ -1,7 +1,7 @@
 id: plan-next-toolset-slice
 epic: ai-toolset-foundations
 title: Queue the next planning pass for the AI toolset backlog
-status: pending
+status: done
 complexity: low
 methodology: classic
 depends_on: [models-md-automation, printer-agent-link, byok-app-shell, github-pages-showcase]
@@ -64,3 +64,17 @@ risks:
     mitigation: Acceptance criteria allows explicitly-deferred slices with documented reasons, not just fully-landed ones
 
 references: []
+
+implementation_note: |
+  Landed vs deferred reviewed with the user (2026-09-10): MODELS.md
+  automation, GitHub Pages showcase, and BYOK app shell all shipped and
+  released (v0.1.1, v0.2.0, v0.3.0). printer-agent-link is implemented
+  and unit-tested but held out of the release flow pending real-hardware
+  verification (user will provide LAN details when ready).
+
+  Next epic confirmed by user: model-forge Milestone 1 (bracket-gen —
+  parametric L-bracket/angle-plate template + measurement-intake CLI),
+  planned in the separate model-forge repo, not here. model-forge has no
+  .pHive/ yet, so this is a fresh /plugin-hive:kickoff there before
+  /plugin-hive:plan. Queued as the next concrete step rather than started
+  in this same session/turn, given the scope of this epic's own execution.
