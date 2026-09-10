@@ -15,6 +15,8 @@ Shop-floor workspace for the Bambu X1C, evolving into an AI-assisted toolset for
 - **the studio** — planned chat-based workspace where a user iterates on a generated model with an agent (tweak, discuss, regenerate) rather than a one-shot generation.
 - **Status legend** (MODELS.md) — ⬜ to pull · ✅ in raws · 🎚️ sliced · 🖨️ printed.
 
+- **knowledge-base/** — structured catalog of adjacent tools/slicer-forks/algorithms (e.g. WaveOverhangs) worth tracking for this toolset. `entries.yaml` is the machine-readable source; `README.md` is the human index. Add an entry whenever a relevant external tool comes up rather than letting it live only in chat history.
+
 ## Key paths
 
 - `MODELS.md` — model manifest; update status emoji as a model moves through the pipeline.

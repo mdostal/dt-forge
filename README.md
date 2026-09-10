@@ -11,6 +11,10 @@ LAN mode. **Built and unit-tested, not yet verified against real hardware**
 (`dt-forge-printer-host`/`-serial`/`-access-code`) once you're ready to test
 against the actual printer; see the story's `implementation_note`.
 
+[`knowledge-base/`](knowledge-base/) — adjacent tools/slicer-forks/algorithms
+worth tracking (e.g. WaveOverhangs), structured so they can be fetched and
+checked, not just remembered in chat.
+
 Operational workspace for the Bambu X1C — the actual print jobs: source models, sliced files, plate profiles, and the licensing log for anything we might sell prints of.
 
 > This is the **shop-floor** repo. Model *creation / tooling* (AI-3D, CAD, photo-to-3D, drone-to-model) lives in a separate repo: [`../model-forge`](../model-forge).
