@@ -110,6 +110,22 @@ north_star:
     Single user today. The future showcase app is public-facing, but BYOK
     means each user brings their own key/subscription, so there's no shared
     backend load to plan capacity for.
+  studio_workflow_example: >
+    Concrete example of the "studio" loop, captured 2026-09-10 from a real
+    session: user drops a photo set + rough verbal measurements for a
+    furniture bracket ("we can round everything, this doesn't have to be
+    exact"). The agent's job in that loop: look at the photos to confirm
+    shape (this corrected a wrong assumption from the original NOTES.md
+    speculation), take the rounded numbers as ground truth rather than
+    over-fitting OCR off caliper photos, flag the genuine gaps it can't
+    fill confidently (e.g. strip width wasn't stated — estimated and
+    explicitly flagged as an assumption needing a real measurement, not
+    silently guessed), and produce a usable output (measurements.yaml,
+    ready to render) while leaving a clear trail of what's confirmed vs.
+    assumed. That's the shape the BYOK app's chat studio should reproduce
+    interactively: judge what's given, ask for the specific missing piece
+    rather than a vague "need more info," and keep going instead of
+    blocking on every uncertainty.
   pain_points: >
     Manually tracking model license/status through the raws → sliced →
     printed lifecycle in MODELS.md. Bigger pain: need AI automation and
