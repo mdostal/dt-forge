@@ -5,6 +5,12 @@ Live showcase: https://mdostal.github.io/dt-forge/
 BYOK app shell (settings screen for your own key, Portunus + Heimdall wired
 under the hood): `cd app && npm start`, then open http://localhost:4173
 
+Printer-agent link (`printer/`): read-only X1C status/AMS + send-file over
+LAN mode. **Built and unit-tested, not yet verified against real hardware**
+— printer LAN IP/serial/access code go into Portunus
+(`dt-forge-printer-host`/`-serial`/`-access-code`) once you're ready to test
+against the actual printer; see the story's `implementation_note`.
+
 Operational workspace for the Bambu X1C — the actual print jobs: source models, sliced files, plate profiles, and the licensing log for anything we might sell prints of.
 
 > This is the **shop-floor** repo. Model *creation / tooling* (AI-3D, CAD, photo-to-3D, drone-to-model) lives in a separate repo: [`../model-forge`](../model-forge).

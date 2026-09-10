@@ -1,7 +1,7 @@
 id: printer-agent-link
 epic: ai-toolset-foundations
 title: Read-only Bambu X1C status link + send/queue a sliced file for a human to print
-status: pending
+status: implemented-pending-hardware-verification
 complexity: high
 methodology: classic
 depends_on: []
@@ -90,3 +90,12 @@ references:
       integrations:
         mcp_servers:
           portunus: { detected: true, note: "... intended per kickoff conversation for secret/key management (BYOK) in the future app." }
+
+implementation_note: |
+  Built + unit-tested (14/14 passing, mocked MQTT/FTP) against the
+  documented LAN protocol. NOT yet verified against the real X1C — user
+  explicitly deferred sharing LAN IP/serial/access code until "the testing
+  stage" (2026-09-10). Config loader confirmed to degrade cleanly against
+  the real (empty) Portunus vault. This story stays out of the dev->main
+  release flow until real hardware verification happens; see the epic
+  hand-off story for tracking.

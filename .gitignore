@@ -24,3 +24,4 @@ sliced/**/*.3mf
 # BUT keep folder structure + anything we explicitly own
 !**/.gitkeep
 !owned/**
+node_modules/
