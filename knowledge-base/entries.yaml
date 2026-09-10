@@ -1,0 +1,51 @@
+# DT Forge knowledge base — adjacent tools, forks, and algorithms worth
+# tracking, evaluating, or eventually integrating with the toolset.
+#
+# Structured (not just prose) so future tooling can fetch/filter/check this
+# programmatically — e.g. "what's relevant to print quality?" or "what have
+# we not evaluated yet?" See knowledge-base.md for the human-readable index.
+#
+# Schema per entry:
+#   id, name, type, description, source: {repo, homepage, upstream},
+#   relevant_to: [], status: reference|evaluating|testing|integrated,
+#   integration_notes, added, sources: [] (citations for the description)
+
+entries:
+  - id: waveoverhangs
+    name: WaveOverhangs
+    type: slicer-fork
+    description: >
+      An OrcaSlicer fork that ports stmcculloch/PrusaSlicer-WaveOverhangs,
+      adding wave-overhang printing so steep overhangs can print without
+      support material. Generates a seed band along the supported edge of
+      an overhang, then propagates wavefronts outward from it until the
+      fronts can't grow further within the layer; a pattern mode (Smart /
+      Monotonic / ZigZag) decides how the fronts connect. Ships two
+      pluggable algorithms: Andersons (an arc-overhang descendant of the
+      PrusaSlicer original) and a from-scratch C++ reimplementation of
+      Rieks Kaiser's MSc thesis algorithm ("Kaiser LaSO"). ~20 expert
+      tunables: line spacing, flow (mm3/mm), ring overlap, seam mode,
+      spacing mode, pattern, perimeter overlap, minimum wave width, max
+      iterations, authoritative floor layers, cooling overrides, and more.
+    source:
+      repo: https://github.com/dennisklappe/OrcaSlicer-WaveOverhangs
+      homepage: https://waveoverhangs.com/
+      upstream: https://github.com/stmcculloch/PrusaSlicer-WaveOverhangs
+      other_forks:
+        - https://github.com/edmer6256/orcaslicer-waveoverhangs
+        - https://github.com/bobarth/OrcaSlicer-WaveOverhangs
+    relevant_to: [print-quality, overhangs, slicer-forks, printer-agent-link]
+    status: reference
+    integration_notes: >
+      Not evaluated on real hardware yet. If overhang quality becomes a
+      real pain point (e.g. on organic/Meshy-generated prints from
+      model-forge), this is the first thing to test: install one of the
+      maintained forks, slice a known-overhang test part on the X1C, and
+      compare against stock OrcaSlicer/Bambu Studio support settings. Would
+      slot in as an alternative slicer path, not a code dependency —
+      dt-forge doesn't call into slicer internals today.
+    added: "2026-09-10"
+    sources:
+      - https://github.com/edmer6256/orcaslicer-waveoverhangs/tree/main/
+      - https://github.com/dennisklappe/OrcaSlicer-WaveOverhangs
+      - https://waveoverhangs.com/

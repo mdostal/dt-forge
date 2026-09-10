@@ -5,6 +5,9 @@ Live showcase: https://mdostal.github.io/dt-forge/
 BYOK app shell (settings screen for your own key, Portunus + Heimdall wired
 under the hood): `cd app && npm start`, then open http://localhost:4173
 
+[`knowledge-base/`](knowledge-base/) — adjacent tools/slicer-forks/algorithms
+worth tracking (e.g. WaveOverhangs), structured so they can be fetched and
+checked, not just remembered in chat.
 Operational workspace for the Bambu X1C — the actual print jobs: source models, sliced files, plate profiles, and the licensing log for anything we might sell prints of.
 
 > This is the **shop-floor** repo. Model *creation / tooling* (AI-3D, CAD, photo-to-3D, drone-to-model) lives in a separate repo: [`../model-forge`](../model-forge).
